@@ -72,7 +72,8 @@ def apply_keys(link, sleep_time=0.2):
         for _ in range(4):
             tab(sleep_time)
 
-        # at the point the form is filled. The user should make final 'ENTER'
+        # at the point the form is filled. The user should make final 'ENTER' or 'SPACE'
+        # space(sleep_time)
         while True:
             pass
 
@@ -91,20 +92,23 @@ def main():
 
         chrome_options = Options()
         chrome_options.headless = True
-        with webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options) as driver:
-            driver.get(link)
-            time.sleep(1)
+        try:
+            with webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options) as driver:
+                driver.get(link)
+                time.sleep(1)
 
-            # check the content
-            content = driver.page_source
-            # in this particular case, a first option for AstraZeneca is always present
-            if "Impfung mit AstraZeneca" not in content:
-                print('error: no [Impfung mit AstraZeneca]')
-                continue
+                # check the content
+                content = driver.page_source
+                # in this particular case, a first option for AstraZeneca is always present
+                if "Impfung mit AstraZeneca" not in content:
+                    print('error: no [Impfung mit AstraZeneca]')
+                    continue
 
-            # trigger: in this particular case, I am looking for the J&J option
-            if "Johnson" in content:
-                apply_keys(link=link)
+                # trigger: in this particular case, I am looking for the J&J option
+                if "Johnson" in content:
+                    apply_keys(link=link)
+        except Exception as e:
+            print(e)
         time.sleep(1)
 
 
